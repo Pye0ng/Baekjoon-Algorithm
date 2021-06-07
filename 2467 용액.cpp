@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<math.h>
+int abs(int x){ return x>0?x:-x; }
 int k=1, a[100001], min=2000000000;
 
 int main(){
