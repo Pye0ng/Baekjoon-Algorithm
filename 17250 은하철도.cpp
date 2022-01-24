@@ -1,5 +1,5 @@
 #include<stdio.h>
-int p[1000100];
+int p[100100];
 
 int find(int t){
 	if(p[t]<0) return t;
@@ -14,12 +14,12 @@ void unite(int x, int y){
 }
 
 int main(){
-	int n, m, t, a, b, i;
+	int n, m, a, b, i;
 	scanf("%d %d", &n, &m);
-	for(i=0; i<=n; i++) p[i]=-1;
-	while(m--){
-		scanf("%d %d %d", &t, &a, &b);
-		if(t) printf("%s\n", find(a)==find(b)?"YES":"NO");
-		else unite(a, b);
+	for(i=1; i<=n; i++){ scanf("%d", &p[i]); p[i]*=-1; }
+	for(i=0; i<m; i++){
+		scanf("%d %d", &a, &b);
+		unite(a, b);
+		printf("%d\n", -p[find(a)]);
 	}
 }

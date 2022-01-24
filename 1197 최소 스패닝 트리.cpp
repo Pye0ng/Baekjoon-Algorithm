@@ -1,41 +1,45 @@
 #include<stdio.h>
-#include<algorithm>
-#include<vector>
+#include<queue>
 using namespace std;
-int ans, parent[100010];
-bool ch;
-
-typedef struct kruskal{ int a, b, val; }ks;
-vector<ks> v;
-
-bool cmp(ks x, ks y){ return x.val<y.val; }
+struct p{ int v, a, b; };
+struct cmp{
+	bool operator()(p a, p b){
+		return a.v>b.v;
+	}
+};
+priority_queue<p, vector<p>, cmp> q; 
+int ans, pa[10100];
 
 int find(int t){
-    if(t==parent[t]) return t;
-    else return parent[t]=find(parent[t]);
+	if(pa[t]<0) return t;
+	return pa[t]=find(pa[t]);
 }
 
-void uni_on(int x, int y){
-    ch=false;
-    x=find(x); y=find(y);
-    if(x==y) return; //cycle occured
-    parent[x]=y;
-    ch=true;
+void unite(int x, int y){
+	x=find(x); y=find(y);
+	if(x==y) return;
+	if(pa[x]<pa[y]){
+		pa[x]+=pa[y];
+		pa[y]=x;
+	}
+	else{
+		pa[y]+=pa[x];
+		pa[x]=y;
+	}
 }
 
 int main(){
-    int n, m, i;
-    scanf("%d %d", &n, &m);
-    for(i=1; i<=n; i++) parent[i]=i;
-    for(i=0; i<m; i++){
-        ks t;
-        scanf("%d %d %d", &t.a, &t.b, &t.val);
-        v.push_back(t);
-    }
-    sort(v.begin(), v.end(), cmp);
-    for(i=0; i<m; i++){
-        uni_on(v[i].a, v[i].b);
-        if(ch) ans+=v[i].val;
-    }
-    printf("%d", ans);
+	int n, m, i;
+	scanf("%d %d", &n, &m);
+	for(i=0; i<=n; i++) pa[i]=-1;
+	for(i=0; i<m; i++){
+		p t; scanf("%d %d %d", &t.a, &t.b, &t.v);
+		q.push(t);
+	}
+	while(!q.empty()){
+		p t=q.top(); q.pop();
+		if(find(t.a)==find(t.b)) continue;
+		ans+=t.v; unite(t.a, t.b);
+	}
+	printf("%d", ans);
 }
