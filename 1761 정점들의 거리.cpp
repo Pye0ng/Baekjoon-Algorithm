@@ -4,54 +4,49 @@
 #define x first
 #define y second
 using namespace std;
-vector<pair<int, int> > v[40100];
-int in[40100], vis[40100], q[40100], d[20][40100], s[20][40100];
+vector<pair<int, int> > g[40400];
+int d[40400], v[40400], s[18][70000], p[18][70000];
 
 void dfs(int n, int h){
-	vis[n]=1; q[n]=h;
-	for(int i=0; i<v[n].size(); i++)
-		if(!vis[v[n][i].x]){
-			s[0][v[n][i].x]=n;
-			d[0][v[n][i].x]=v[n][i].y;
-			dfs(v[n][i].x, h+1);
+	v[n]=1; d[n]=h;
+	for(int i=0; i<g[n].size(); i++)
+		if(!v[g[n][i].x]){
+			s[0][g[n][i].x]=n;
+			p[0][g[n][i].x]=g[n][i].y;
+			dfs(g[n][i].x, h+1);
 		}
 }
 
 int lca(int a, int b){
-	int sum=0;
-	if(q[a]>q[b]) swap(a, b);
-	for(int i=15; i>=0; i--)
-		if(q[b]-q[a]>=(1<<i)){
-			sum+=d[i][b];
+	int t=0;
+	if(d[a]>d[b]) swap(a, b);
+	for(int i=16; i>=0; i--)
+		if(d[b]-d[a]>=(1<<i)){
+			t+=p[i][b];
 			b=s[i][b];
 		}
-	if(a==b) return sum;
-	for(int i=15; i>=0; i--)
+	if(a==b) return t;
+	for(int i=16; i>=0; i--)
 		if(s[i][a]!=s[i][b]){
-			sum+=(d[i][a]+d[i][b]);
+			t+=p[i][a]+p[i][b];
 			a=s[i][a]; b=s[i][b];
 		}
-	return sum+d[0][a]+d[0][b];
+	return t+p[0][a]+p[0][b];
 }
 
 int main(){
-	int n, m, a, b, t, i, j;
+	int n, m, a, b, c, i, j;
 	scanf("%d", &n);
 	for(i=1; i<n; i++){
-		scanf("%d %d %d", &a, &b, &m);
-		v[a].push_back({b, m});
-		v[b].push_back({a, m});
-		in[a]++; in[b]++;
+		scanf("%d %d %d", &a, &b, &c);
+		g[a].push_back({b, c});
+		g[b].push_back({a, c});
 	}
-	m=0;
-	for(i=1; i<=n; i++)
-		if(in[i]>in[m]) m=i;
-	dfs(m, 0);
-	for(i=1; i<16; i++)
+	dfs(1, 0);
+	for(i=1; i<17; i++)
 		for(j=1; j<=n; j++){
-			t=s[i-1][j];
-			s[i][j]=s[i-1][t];
-			d[i][j]=d[i-1][j]+d[i-1][t];
+			s[i][j]=s[i-1][s[i-1][j]];
+			p[i][j]=p[i-1][j]+p[i-1][s[i-1][j]];
 		}
 	scanf("%d", &m);
 	for(i=0; i<m; i++){

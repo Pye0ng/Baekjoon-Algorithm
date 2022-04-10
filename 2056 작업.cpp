@@ -1,37 +1,37 @@
 #include<stdio.h>
-#include<algorithm>
-#include<vector>
 #include<queue>
+#include<vector>
+#include<algorithm>
 using namespace std;
-vector<int> v[10100];
 queue<int> q;
-int n, m, ans, d[10010], dp[10100], in[10100];
+vector<int> v[10100];
+int d[10100], p[10100], dp[10100], a=0;
 
 int main(){
-	int t, i, j;
+	int n, m, t, i;
 	scanf("%d", &n);
 	for(i=1; i<=n; i++){
-		scanf("%d %d", &d[i], &m);
-		for(j=0; j<m; j++){
+		scanf("%d %d", &p[i], &m);
+		while(m--){
 			scanf("%d", &t);
 			v[t].push_back(i);
-			in[i]++;
+			d[i]++;
 		}
 	}
 	for(i=1; i<=n; i++)
-		if(in[i]==0){
+		if(d[i]==0){
 			q.push(i);
-			dp[i]=d[i];
+			dp[i]=p[i];
 		}
 	while(!q.empty()){
-		t=q.front(); q.pop();
+		t=q.front(); q.pop(); 
 		for(i=0; i<v[t].size(); i++){
-			int s=v[t][i];
-			if(--in[s]==0) q.push(s);
-			dp[s]=max(dp[s], dp[t]+d[s]);
+			m=v[t][i];
+			if(--d[m]==0) q.push(v[t][i]);
+			dp[m]=max(dp[m], dp[t]+p[m]);
 		}
 	}
 	for(i=1; i<=n; i++)
-		ans=max(ans, dp[i]);
-	printf("%d", ans);
+		a=max(a, dp[i]);
+	printf("%d", a);
 }

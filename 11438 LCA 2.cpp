@@ -2,15 +2,15 @@
 #include<algorithm>
 #include<vector>
 using namespace std;
-vector<int> v[100100];
-int d[100100], vis[100100], s[20][100100];
+vector<int> g[100100];
+int d[100100], v[100100], s[20][100100];
 
 void dfs(int n, int h){
-	vis[n]=1; d[n]=h;
-	for(int i=0; i<v[n].size(); i++)
-		if(!vis[v[n][i]]){
-			s[0][v[n][i]]=n;
-			dfs(v[n][i], h+1);
+	v[n]=1; d[n]=h;
+	for(int i=0; i<g[n].size(); i++)
+		if(!v[g[n][i]]){
+			s[0][g[n][i]]=n;
+			dfs(g[n][i], h+1);
 		}
 }
 
@@ -19,12 +19,13 @@ int lca(int a, int b){
 	for(int i=17; i>=0; i--)
 		if(d[b]-d[a]>=(1<<i)) b=s[i][b];
 	if(a==b) return a;
-	for(int i=17; i>=0; i--)
+	for(int i=17; i>=0; i--){
 		if(s[i][a]!=s[i][b]){
 			a=s[i][a];
 			b=s[i][b];
 		}
-	return s[0][b];
+	}
+	return s[0][a];
 }
 
 int main(){
@@ -32,8 +33,8 @@ int main(){
 	scanf("%d", &n);
 	for(i=1; i<n; i++){
 		scanf("%d %d", &a, &b);
-		v[a].push_back(b);
-		v[b].push_back(a);
+		g[a].push_back(b);
+		g[b].push_back(a);
 	}
 	dfs(1, 0);
 	for(i=1; i<18; i++)
