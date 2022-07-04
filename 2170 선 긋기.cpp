@@ -1,23 +1,31 @@
 #include<stdio.h>
-#include<algorithm>
-#define M -1000000001
+#include<vector>
+#include<algorithm> 
+#define x first
+#define y second
 using namespace std;
-typedef pair<int, int> P;
-P t, d[1000010];
-int cnt;
+typedef pair<int, int> pii;
+vector<pii> v;
 
 int main(){
-	int n, i; t={M, M};
+	int n, a, b, ans=0, i;
 	scanf("%d", &n);
-	for(i=1; i<=n; i++) scanf("%d %d", &d[i].first, &d[i].second);
-	sort(d+1, d+n+1);
-	for(i=1; i<=n; i++){
-		if(t.second<d[i].first){
-			cnt+=t.second-t.first;
-			t=d[i];
-		}
-		else t.second=max(t.second, d[i].second);
+	for(i=0; i<n; i++){
+		scanf("%d %d", &a, &b);
+		v.push_back(pii(a, b));
 	}
-	cnt+=t.second-t.first;
-	printf("%d", cnt);
+	sort(v.begin(), v.end());
+	a=b=-1e9;
+	for(i=0; i<n; i++){
+		pii p=v[i];
+		if(p.x>b){
+			ans+=p.y-p.x;
+			a=p.x; b=p.y;
+		}
+		else if(p.y>b){
+			ans+=p.y-b;
+			b=p.y;
+		}
+	}
+	printf("%d", ans);
 }

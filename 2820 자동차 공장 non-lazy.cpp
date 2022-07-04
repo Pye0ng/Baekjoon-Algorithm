@@ -40,7 +40,7 @@ int main(){
 	cin>>n>>m>>d[1]; 
 	s.resize(n*4);
 	for(i=2; i<=n; i++){
-		cin>>a >>t;
+		cin>>a>>t;
 		d[i]=a; g[t].push_back(i);
 	}
 	dfs(1);
