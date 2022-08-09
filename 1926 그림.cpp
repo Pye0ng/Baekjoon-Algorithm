@@ -22,7 +22,7 @@ int main(){
 	for(i=1; i<=n; i++)
 		for(j=1; j<=m; j++) scanf("%d", &map[i][j]);
 	for(i=1; i<=n; i++){
-		for(j=1; j<=n; j++){
+		for(j=1; j<=m; j++){
 			sum=0;
 			if(map[i][j]&&!visited[i][j]){
 				cnt++;

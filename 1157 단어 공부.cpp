@@ -1,23 +1,20 @@
 #include<stdio.h>
-#include<string.h>
-char s[1000001];
-int a[129];
+#include<vector>
+#include<algorithm>
+using namespace std;
+typedef pair<int, int> pii;
+vector<pii> v;
+char s[1001000];
+int a[30];
 
 int main(){
-	int i, max=0, point, ch=0;
+	int i;
 	scanf("%s", s);
-	for(i=0; i<strlen(s); i++){
-		if(s[i]<='Z') a[s[i]-'A']++;
-		else a[s[i]-'a']++;
-	} 
-	for(i=1; i<26; i++){
-		if(a[i]>max){
-			max=a[i];
-			point=i;
-			ch=0;
-		}
-		if(a[i]==max) ch++;
+	for(i=0; s[i]!='\0'; i++){
+		if(s[i]>='a') a[s[i]-'a']++;
+		else a[s[i]-'A']++;
 	}
-	if(ch>=2) printf("?");
-	else printf("%c", point+'A');
+	for(i=0; i<26; i++) v.push_back(pii(a[i], i));
+	sort(v.begin(), v.end());
+	printf("%c", v[25].first==v[24].first?'?':'A'+v[25].second);
 }
