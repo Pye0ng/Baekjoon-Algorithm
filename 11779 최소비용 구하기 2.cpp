@@ -1,42 +1,38 @@
 #include<stdio.h>
 #include<vector>
 #include<queue>
-#define INF 1e9
+#define x first 
+#define y second
 using namespace std;
-vector<pair<int, int> > v[1010];
-priority_queue<pair<int, int> > q;
+typedef pair<int, int> pii;
+priority_queue<pii, vector<pii>, greater<pii> > q;
+vector<pii> v[1010];
 vector<int> ans;
-int n, m, d[1010], dp[1010];
+int INF=1e9, d[1010], dp[1010];
 
 int main(){
-	int a, b, c, co, nw, i;
-	scanf("%d %d", &n, &m);
-	for(i=0; i<m; i++){
-		scanf("%d %d %d", &a, &b, &c);
-		v[a].push_back({b, c});
+	int n, s, e, c, i;
+	scanf("%d %d", &n, &e);
+	while(e--){
+		int a, b;
+		scanf("%d %d %d", &a, &b, &s);
+		v[a].push_back(pii(b, s));
 	}
-	for(i=0; i<=n; i++) d[i]=INF;
-	scanf("%d %d", &a, &b);
-	q.push({0, a}); d[a]=0;
+	scanf("%d %d", &s, &e);
+	for(i=1; i<=n; i++) d[i]=s==i?0:INF;
+	q.push(pii(0, s));
 	while(!q.empty()){
-		co=-q.top().first;
-		nw=q.top().second;
-		q.pop();
-		for(i=0; i<v[nw].size(); i++){
-			int cost=co+v[nw][i].second;
-			if(cost<d[v[nw][i].first]){
-				d[v[nw][i].first]=cost;
-				q.push({-cost, v[nw][i].first});
-				dp[v[nw][i].first]=nw;
+		pii p=q.top(); q.pop();
+		if(p.x>d[p.y]) continue;
+		for(auto i:v[p.y]){
+			c=p.x+i.y;
+			if(c<d[i.x]){
+				d[i.x]=c; dp[i.x]=p.y;
+				q.push(pii(c, i.x));
 			}
 		}
 	}
-	nw=b;
-	while(b!=a){
-		ans.push_back(b);
-		b=dp[b];
-	}
-	ans.push_back(a);
-	printf("%d\n%d\n", d[nw], ans.size());
+	for(i=e; i>0; i=dp[i]) ans.push_back(i);
+	printf("%d\n%d\n", d[e], ans.size());
 	for(i=ans.size()-1; i>=0; i--) printf("%d ", ans[i]);
 }
